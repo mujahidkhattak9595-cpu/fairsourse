@@ -1,0 +1,31 @@
+name: Fairsourse Daily Refresh Bot
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install deps
+        run: npm install axios || true
+      - name: Run Agent
+        run: node fairsourse-agent.js
+        env:
+          ALI_APP_KEY: ${{ secrets.ALI_APP_KEY }}
+          ALI_APP_SECRET: ${{ secrets.ALI_APP_SECRET }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+      - name: Commit updated data
+        run: |
+          git config user.name "fairsourse-bot"
+          git config user.email "bot@fairsourse.com"
+          git add .
+          git commit -m "Daily viral refresh - $(date)" || echo "No changes"
+          git push
