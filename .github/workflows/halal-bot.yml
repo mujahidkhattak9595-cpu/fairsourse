@@ -1,26 +1,19 @@
+import os, random, requests
 
-name: Halal Affiliate Bot
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 4 * * *'
-  push:
-    branches: [ main ]
+TOKEN = os.getenv("BOT_TOKEN")
+CHANNEL = os.getenv("CHANNEL_ID")
 
-jobs:
-  run-bot:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-      - run: pip install -r requirements.txt
-      - run: python bot.py
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-          ALI_APP_KEY: ${{ secrets.ALI_APP_KEY }}
-          ALI_APP_SECRET: ${{ secrets.ALI_APP_SECRET }}
-          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
-          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+PRODUCTS = [
+    {"title": "Premium Muslim Prayer Cap Topi", "price": "$4.99", "link": "https://s.click.aliexpress.com/e/_DD5zKzJ"},
+    {"title": "Digital Tasbeeh Counter Ring", "price": "$2.99", "link": "https://s.click.aliexpress.com/e/_DD5zKzJ"},
+    {"title": "Attar Perfume Alcohol Free", "price": "$8.99", "link": "https://s.click.aliexpress.com/e/_DD5zKzJ"},
+    {"title": "Islamic LED Night Light", "price": "$6.49", "link": "https://s.click.aliexpress.com/e/_DD5zKzJ"},
+]
+
+p = random.choice(PRODUCTS)
+msg = f"🔥 **{p['title']}**\n\n💰 Price: {p['price']}\n⭐ Best Seller\n\n🛒 Order Now:\n{p['link']}\n\n#Deals #Offer #Trending"
+
+url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+data = {"chat_id": CHANNEL, "text": msg, "parse_mode": "Markdown"}
+r = requests.post(url, data=data)
+print(f"Telegram Response: {r.text}")
