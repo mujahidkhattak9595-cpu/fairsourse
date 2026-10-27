@@ -1,3 +1,4 @@
+
 name: Halal Affiliate Bot
 on:
   workflow_dispatch:
@@ -16,3 +17,10 @@ jobs:
           python-version: '3.10'
       - run: pip install -r requirements.txt
       - run: python bot.py
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+          ALI_APP_KEY: ${{ secrets.ALI_APP_KEY }}
+          ALI_APP_SECRET: ${{ secrets.ALI_APP_SECRET }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
